@@ -1,7 +1,7 @@
 {
   "name": "Mobilya Üretim Hata Takip Pro",
   "short_name": "Hata Takip",
-  "description": "Mobilya üretim hatalarını takip etme ve PDF raporlama uygulaması",
+  "description": "Mobilya üretim hatalarını takip etme uygulaması",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -9,13 +9,13 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "https://www.w3.org/TR/appmanifest/images/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "https://www.w3.org/TR/appmanifest/images/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
