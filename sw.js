@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hata-takip-pro-v1';
+const CACHE_NAME = 'hata-takip-pro-v2';
 
 // الملفات والمكتبات التي سيتم تخزينها للعمل بدون إنترنت
 const urlsToCache = [
@@ -50,3 +50,4 @@ self.addEventListener('activate', event => {
     })
   );
 });
+
