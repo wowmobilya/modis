@@ -1,0 +1,17 @@
+{
+  "name": "Mobilya Üretim Hata Takip Pro",
+  "short_name": "Hata Takip",
+  "description": "Mobilya üretim hata takip ve raporlama uygulaması",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f6f7fb",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2734/2734072.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
