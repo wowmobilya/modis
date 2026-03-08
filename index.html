@@ -1189,6 +1189,20 @@
           <input id="settCompany" class="input" type="text" placeholder="Şirket adı..." />
         </div>
 
+      <!-- زر التثبيت اليدوي (سيكون مخفياً حتى يسمح المتصفح بالتثبيت) -->
+      <div class="settings-item hidden" id="installAppContainer">
+        <div class="si-icon">
+          <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></span>
+        </div>
+        <div class="si-main">
+          <div class="t">تطبيق سطح المكتب / الهاتف</div>
+          <div class="s">قم بتثبيت التطبيق للوصول السريع</div>
+        </div>
+        <button class="btn btn-primary" id="installAppBtn" style="width:auto; padding:8px 16px; font-size:12px; border-radius: 12px;">تثبيت</button>
+      </div>
+
+
+        
         <div class="form-group">
           <label class="label">Logo</label>
           <div class="logo-upload" id="logoUpload">
@@ -2632,9 +2646,55 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+
+/* =========================================================
+   PWA Manual Install Logic
+========================================================= */
+let deferredPrompt;
+const installContainer = document.getElementById('installAppContainer');
+const installBtn = document.getElementById('installAppBtn');
+
+// التقاط حدث التثبيت من المتصفح
+window.addEventListener('beforeinstallprompt', (e) => {
+  // منع المتصفح من إظهار الرسالة التلقائية المزعجة
+  e.preventDefault();
+  // حفظ الحدث لاستخدامه عند الضغط على الزر
+  deferredPrompt = e;
+  // إظهار زر التثبيت في صفحة الإعدادات
+  if(installContainer) installContainer.classList.remove('hidden');
+});
+
+// تفعيل التثبيت عند الضغط على الزر
+if(installBtn){
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      // إظهار نافذة التثبيت الخاصة بالنظام
+      deferredPrompt.prompt();
+      // انتظار رد المستخدم (موافق أو إلغاء)
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('تم التثبيت بنجاح');
+        installContainer.classList.add('hidden');
+      }
+      // تصفير المتغير
+      deferredPrompt = null;
+    }
+  });
+}
+
+// إخفاء الزر إذا تم تثبيت التطبيق بالفعل
+window.addEventListener('appinstalled', () => {
+  if(installContainer) installContainer.classList.add('hidden');
+  toast('تم تثبيت التطبيق بنجاح!');
+});
+
+
+
+  
 init();
 </script>
 </body>
 </html>
+
 
 
