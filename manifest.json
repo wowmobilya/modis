@@ -1,0 +1,18 @@
+{
+  "name": "Mobilya Üretim Hata Takip Pro",
+  "short_name": "Hata Takip",
+  "description": "Mobilya üretim hata takip ve kalite kontrol uygulaması",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#0f1115",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230f1115'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
