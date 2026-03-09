@@ -7,7 +7,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
-  <!-- ربط ملف الـ Manifest والأيقونة -->
   <link rel="manifest" href="./manifest.json">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2734/2734072.png">
   
@@ -18,7 +17,6 @@
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
   <style>
-    /* ... (نفس أكواد الـ CSS الخاصة بك بدون أي تغيير) ... */
     :root{
       --bg:#f6f7fb;
       --bg-soft:#ffffff;
@@ -1007,11 +1005,34 @@
       margin-top:24px;padding-top:12px;border-top:2px solid #e5e7eb;
       display:flex;justify-content:space-between;gap:16px;font-size:10px;color:#6b7280
     }
+
+    /* Lightbox Styles */
+    .lightbox {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000;
+      display: flex; flex-direction: column; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .lightbox.show { opacity: 1; pointer-events: auto; }
+    .lb-head {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px; color: #fff; position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+      background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+    }
+    .lb-title { font-size: 16px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .lb-close { background: none; border: none; color: #fff; cursor: pointer; display: flex; padding: 4px; }
+    .lb-close .app-icon { width: 24px; height: 24px; }
+    .lb-body { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; }
+    .lb-img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); transform-origin: center center; }
+    .lb-img.zoomed { transform: scale(2.5); cursor: grab; }
+    .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(4px); transition: background 0.2s; z-index: 2; }
+    .lb-nav:active { background: rgba(255,255,255,0.3); }
+    .lb-prev { left: 16px; }
+    .lb-next { right: 16px; }
+    .lb-nav .app-icon { width: 20px; height: 20px; }
   </style>
 </head>
 <body>
 
-<!-- ... (نفس محتوى الـ Body الخاص بك بدون أي تغيير) ... -->
 <div id="splash">
   <div class="splash-logo" id="splashBrand"></div>
   <div class="splash-title" id="splashCompany">Şirket Adı</div>
@@ -1236,7 +1257,7 @@
           <div class="about-badge" id="aboutInfoIcon"></div>
           <div>
             <div class="about-title">Program Bilgileri</div>
-            <div class="about-sub">Modern uygulama bilgisi ve hızlı iletişim alanı</div>
+            <div class="about-sub">Modern uygulama bilgisi و hızlı iletişim alanı</div>
           </div>
         </div>
 
@@ -1284,6 +1305,25 @@
       </button>
     </nav>
   </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-head">
+    <div class="lb-title" id="lbTitle">Fotoğraf</div>
+    <button class="lb-close" onclick="closeLightbox()">
+      <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="M6 6l12 12"></path></svg></span>
+    </button>
+  </div>
+  <button class="lb-nav lb-prev" onclick="lbPrev()">
+    <span class="app-icon"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg></span>
+  </button>
+  <div class="lb-body" id="lbBody">
+    <img src="" id="lbImg" class="lb-img" alt="Büyük Fotoğraf">
+  </div>
+  <button class="lb-nav lb-next" onclick="lbNext()">
+    <span class="app-icon"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg></span>
+  </button>
 </div>
 
 <div class="modal-overlay" id="deleteModal">
@@ -1352,7 +1392,7 @@ const Icons = {
   inspect: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="m20 20-4-4"></path></svg></span>`,
   file: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path><path d="M14 2v5h5"></path></svg></span>`,
   info: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 10v6"></path><path d="M12 7h.01"></path></svg></span>`,
-  whatsapp: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><path d="M20 11.5A8.5 8.5 0 0 1 7.7 19l-3.7 1 1.1-3.5A8.5 8.5 0 1 1 20 11.5Z"></path><path d="M9.7 8.9c.2-.4.4-.4.7-.4h.5c.2 0 .4 0 .5.4.2.5.7 1.6.8 1.7.1.2.1.3 0 .5-.1.1-.2.3-.4.4-.1.1-.2.2-.3.4-.1.1-.2.2 0 .5.2.3.8 1.3 1.8 2 .9.8 1.7 1 2 .9.2-.1.4-.5.5-.7.1-.2.3-.2.5-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.4s-.1 1-.7 1.4c-.6.4-1.4.6-1.6.6s-1.5-.2-2.9-1.1a11.6 11.6 0 0 1-3.4-4.1c-.9-1.6-.9-2.9-.7-3.3Z"></path></svg></span>`
+  whatsapp: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><path d="M20 11.5A8.5 8.5 0 0 1 7.7 19l-3.7 1 1.1-3.5A8.5 8.5 0 1 1 20 11.5Z"></path><path d="M9.7 8.9c.2-.4.4-.4.7-.4h.5c.2 0 .4 0 .5.4.2.5.7 1.6.8 1.7.1.2.1.3 0 .5-.1.1-.2.3-.4.4-.1.1-.2.2-.3.4-.1.1-.2.2-.3.4-.1.1-.2.2 0 .5.2.3.8 1.3 1.8 2 .9.8 1.7 1 2 .9.2-.1.4-.5.5-.7.1-.2.3-.2.5-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.4s-.1 1-.7 1.4c-.6.4-1.4.6-1.6.6s-1.5-.2-2.9-1.1a11.6 11.6 0 0 1-3.4-4.1c-.9-1.6-.9-2.9-.7-3.3Z"></path></svg></span>`
 };
 
 function icon(name){
@@ -1494,6 +1534,10 @@ let currentPhotoTab = 'before';
 let beforePhotos = [null, null, null];
 let afterPhotos = [null, null, null];
 let navStack = ['home'];
+
+// Lightbox State
+let lbImages = [];
+let lbCurrentIndex = 0;
 
 const DEPTS = {
   'İmalat Kesim':    { icon:'scissors',   bg:'#fee2e2', color:'#dc2626' },
@@ -1727,6 +1771,11 @@ function exitApp(){
 }
 
 function goBack(){
+  if(document.getElementById('lightbox').classList.contains('show')) {
+    closeLightbox();
+    return;
+  }
+
   if(currentPage === 'home'){
     exitApp();
     return;
@@ -2084,20 +2133,27 @@ function editReport(id){
 }
 
 /* =========================================================
-   Detail
+   Detail & Lightbox
 ========================================================= */
-function photoGridHTML(blobs){
-  const list = (blobs || []).filter(Boolean);
-  if(!list.length) return '';
-
-  return `
-    <div class="photo-grid">
-      ${list.map(b=>{
-        const url = blobToObjectURL(b);
-        return `<div class="photo-box"><img src="${url}" alt="Fotoğraf"></div>`;
-      }).join('')}
-    </div>
-  `;
+function photoGridHTML(blobs, prefix){
+  const list = (blobs || []);
+  let html = '<div class="photo-grid">';
+  
+  list.forEach((b, i) => {
+    if(b){
+      const url = blobToObjectURL(b);
+      const title = `${prefix} ${i+1}`;
+      html += `
+        <div class="photo-box" onclick="openLightbox('${url}', '${title}')">
+          <img src="${url}" alt="${title}">
+          <div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:bold;">${i+1}</div>
+        </div>
+      `;
+    }
+  });
+  
+  html += '</div>';
+  return html;
 }
 
 function openDetail(id){
@@ -2106,27 +2162,38 @@ function openDetail(id){
 
   const cfg = DEPTS[r.dept] || { icon:'file' };
   const st = statusInfo[r.status] || statusInfo['Açık'];
-  const beforeList = (r.beforePhotos || []).filter(Boolean);
-  const afterList = (r.afterPhotos || []).filter(Boolean);
+  const beforeList = (r.beforePhotos || []);
+  const afterList = (r.afterPhotos || []);
+
+  // تجهيز مصفوفة الصور للـ Lightbox
+  lbImages = [];
+  beforeList.forEach((b, i) => { if(b) lbImages.push({ url: blobToObjectURL(b), title: `Önce ${i+1}` }); });
+  afterList.forEach((b, i) => { if(b) lbImages.push({ url: blobToObjectURL(b), title: `Sonra ${i+1}` }); });
 
   let baSection = '';
-  if(beforeList.length && afterList.length){
-    const bUrl = blobToObjectURL(beforeList[0]);
-    const aUrl = blobToObjectURL(afterList[0]);
-    baSection = `
-      <div class="card">
-        <div class="block-title">Önce / Sonra</div>
-        <div class="ba-stage">
-          <img src="${bUrl}" alt="Önce">
-          <img src="${aUrl}" id="detailBAAfter" class="ba-after" alt="Sonra" style="clip-path:inset(0 50% 0 0)">
-          <div class="ba-line" id="detailBALine" style="left:50%"><div class="ba-knob">${icon('compare')}</div></div>
-          <span class="ba-tag left">ÖNCE</span>
-          <span class="ba-tag right">SONRA</span>
+  // إنشاء مقارنات متعددة بناءً على الصور المتوفرة (1 مع 1، 2 مع 2، 3 مع 3)
+  for(let i=0; i<3; i++){
+    if(beforeList[i] && afterList[i]){
+      const bUrl = blobToObjectURL(beforeList[i]);
+      const aUrl = blobToObjectURL(afterList[i]);
+      baSection += `
+        <div class="card">
+          <div class="block-title">Karşılaştırma ${i+1}</div>
+          <div class="ba-stage">
+            <img src="${bUrl}" alt="Önce ${i+1}">
+            <img src="${aUrl}" id="detailBAAfter${i}" class="ba-after" alt="Sonra ${i+1}" style="clip-path:inset(0 50% 0 0)">
+            <div class="ba-line" id="detailBALine${i}" style="left:50%"><div class="ba-knob">${icon('compare')}</div></div>
+            <span class="ba-tag left">ÖNCE</span>
+            <span class="ba-tag right">SONRA</span>
+          </div>
+          <input class="range" type="range" min="0" max="100" value="50" oninput="updateDetailBA(this.value, ${i})">
         </div>
-        <input class="range" type="range" min="0" max="100" value="50" oninput="updateDetailBA(this.value)">
-      </div>
-    `;
+      `;
+    }
   }
+
+  const hasBefore = beforeList.some(Boolean);
+  const hasAfter = afterList.some(Boolean);
 
   const html = `
     <div class="detail-top">
@@ -2168,11 +2235,11 @@ function openDetail(id){
 
     ${baSection}
 
-    ${(beforeList.length || afterList.length) ? `
+    ${(hasBefore || hasAfter) ? `
       <div class="card">
         <div class="block-title">Fotoğraflar</div>
-        ${beforeList.length ? `<div style="font-size:12px;font-weight:900;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px">${icon('camera')} <span>Önce</span></div>${photoGridHTML(beforeList)}` : ''}
-        ${afterList.length ? `<div style="font-size:12px;font-weight:900;color:var(--muted);margin:12px 0 8px;display:flex;align-items:center;gap:6px">${icon('checkCircle')} <span>Sonra</span></div>${photoGridHTML(afterList)}` : ''}
+        ${hasBefore ? `<div style="font-size:12px;font-weight:900;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px">${icon('camera')} <span>Önce</span></div>${photoGridHTML(beforeList, 'Önce')}` : ''}
+        ${hasAfter ? `<div style="font-size:12px;font-weight:900;color:var(--muted);margin:12px 0 8px;display:flex;align-items:center;gap:6px">${icon('checkCircle')} <span>Sonra</span></div>${photoGridHTML(afterList, 'Sonra')}` : ''}
       </div>
     ` : ''}
 
@@ -2198,13 +2265,114 @@ function openDetail(id){
   navigate('detail');
 }
 
-function updateDetailBA(val){
+function updateDetailBA(val, index){
   const pct = 100 - Number(val);
-  const img = document.getElementById('detailBAAfter');
-  const line = document.getElementById('detailBALine');
+  const img = document.getElementById(`detailBAAfter${index}`);
+  const line = document.getElementById(`detailBALine${index}`);
   if(img) img.style.clipPath = `inset(0 ${pct}% 0 0)`;
   if(line) line.style.left = val + '%';
 }
+
+/* --- Lightbox Logic --- */
+function openLightbox(url, title) {
+  const idx = lbImages.findIndex(img => img.url === url);
+  if(idx !== -1) lbCurrentIndex = idx;
+  
+  updateLightboxView();
+  document.getElementById('lightbox').classList.add('show');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+  const img = document.getElementById('lbImg');
+  img.classList.remove('zoomed');
+  img.style.transform = '';
+}
+
+function updateLightboxView() {
+  if(!lbImages.length) return;
+  const imgData = lbImages[lbCurrentIndex];
+  const imgEl = document.getElementById('lbImg');
+  
+  imgEl.src = imgData.url;
+  imgEl.classList.remove('zoomed');
+  imgEl.style.transform = '';
+  document.getElementById('lbTitle').textContent = `${imgData.title} (${lbCurrentIndex + 1} / ${lbImages.length})`;
+  
+  document.querySelector('.lb-prev').style.opacity = lbCurrentIndex > 0 ? '1' : '0.3';
+  document.querySelector('.lb-next').style.opacity = lbCurrentIndex < lbImages.length - 1 ? '1' : '0.3';
+}
+
+function lbPrev() {
+  if (lbCurrentIndex > 0) {
+    lbCurrentIndex--;
+    updateLightboxView();
+  }
+}
+
+function lbNext() {
+  if (lbCurrentIndex < lbImages.length - 1) {
+    lbCurrentIndex++;
+    updateLightboxView();
+  }
+}
+
+// Zoom & Swipe Logic for Lightbox
+let touchStartX = 0;
+let touchEndX = 0;
+let isZoomed = false;
+
+const lbImg = document.getElementById('lbImg');
+const lbBody = document.getElementById('lbBody');
+
+lbImg.addEventListener('click', (e) => {
+  isZoomed = !isZoomed;
+  if(isZoomed) {
+    lbImg.classList.add('zoomed');
+  } else {
+    lbImg.classList.remove('zoomed');
+    lbImg.style.transform = '';
+  }
+});
+
+lbBody.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+
+lbBody.addEventListener('touchend', e => {
+  if(isZoomed) return; // Disable swipe when zoomed
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+}, {passive: true});
+
+function handleSwipe() {
+  const swipeThreshold = 50;
+  if (touchEndX < touchStartX - swipeThreshold) lbNext();
+  if (touchEndX > touchStartX + swipeThreshold) lbPrev();
+}
+
+// Pan zoomed image
+let isDragging = false;
+let startX, startY, translateX = 0, translateY = 0;
+
+lbImg.addEventListener('pointerdown', (e) => {
+  if(!isZoomed) return;
+  isDragging = true;
+  startX = e.clientX - translateX;
+  startY = e.clientY - translateY;
+  lbImg.setPointerCapture(e.pointerId);
+});
+
+lbImg.addEventListener('pointermove', (e) => {
+  if(!isDragging || !isZoomed) return;
+  translateX = e.clientX - startX;
+  translateY = e.clientY - startY;
+  lbImg.style.transform = `scale(2.5) translate(${translateX/2.5}px, ${translateY/2.5}px)`;
+});
+
+lbImg.addEventListener('pointerup', () => { isDragging = false; });
+lbImg.addEventListener('pointercancel', () => { isDragging = false; });
+
 
 /* =========================================================
    Delete
@@ -2351,8 +2519,8 @@ async function buildReportPDFBlob(id){
   const afterList = (r.afterPhotos || []).filter(Boolean);
 
   const logoUrl = companyLogoBlob ? blobToObjectURL(companyLogoBlob) : '';
-  const beforeHTML = beforeList.map(b=>`<img src="${blobToObjectURL(b)}" alt="Önce">`).join('');
-  const afterHTML = afterList.map(b=>`<img src="${blobToObjectURL(b)}" alt="Sonra">`).join('');
+  const beforeHTML = beforeList.map((b,i)=>`<div style="position:relative"><img src="${blobToObjectURL(b)}" alt="Önce"><div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:8px;padding:2px 4px;border-radius:2px;">${i+1}</div></div>`).join('');
+  const afterHTML = afterList.map((b,i)=>`<div style="position:relative"><img src="${blobToObjectURL(b)}" alt="Sonra"><div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:8px;padding:2px 4px;border-radius:2px;">${i+1}</div></div>`).join('');
   const barcodeSvg = makeBarcodeSvg(r.id);
 
   pdfWrap.innerHTML = `
@@ -2620,7 +2788,6 @@ async function init(){
   }
 }
 
-// تسجيل الـ Service Worker ليعمل التطبيق بدون إنترنت
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').then((registration) => {
@@ -2635,5 +2802,4 @@ init();
 </script>
 </body>
 </html>
-
 
