@@ -2674,13 +2674,17 @@ async function buildReportPDFBlob(id){
     </div>
   `;
 
+  // ... (الكود السابق داخل الدالة يبقى كما هو حتى نصل إلى هنا) ...
+
   const canvas = await html2canvas(pdfWrap, {
-    scale: 3,
+    scale: 3, // تم الرفع من 2 إلى 4 للحصول على دقة فائقة (Ultra HD)
     backgroundColor: '#ffffff',
-    useCORS: true
+    useCORS: true,
+    logging: false
   });
 
-  const imgData = canvas.toDataURL('image/jpeg', 1.0);
+  // تم رفع جودة الصورة إلى 1.0 (أعلى جودة 100%)
+  const imgData = canvas.toDataURL('image/jpeg', 1.0); 
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF('p', 'mm', 'a4');
   const pageW = 210;
@@ -2691,13 +2695,13 @@ async function buildReportPDFBlob(id){
   let heightLeft = imgH;
   let pos = 0;
 
-  pdf.addImage(imgData, 'JPEG', 0, pos, imgW, imgH);
+  pdf.addImage(imgData, 'JPEG', 0, pos, imgW, imgH, undefined, 'FAST');
   heightLeft -= pageH;
 
   while(heightLeft > 0){
     pos = heightLeft - imgH;
     pdf.addPage();
-    pdf.addImage(imgData, 'JPEG', 0, pos, imgW, imgH);
+    pdf.addImage(imgData, 'JPEG', 0, pos, imgW, imgH, undefined, 'FAST');
     heightLeft -= pageH;
   }
 
@@ -2887,6 +2891,7 @@ init();
 </script>
 </body>
 </html>
+
 
 
 
