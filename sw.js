@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mobilya-takip-v3';
+const CACHE_NAME = 'mobilya-takip-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -54,6 +54,7 @@ self.addEventListener('activate', (event) => {
     })
   );
 });
+
 
 
 
