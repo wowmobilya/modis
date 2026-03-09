@@ -2675,12 +2675,12 @@ async function buildReportPDFBlob(id){
   `;
 
   const canvas = await html2canvas(pdfWrap, {
-    scale: 2,
+    scale: 3,
     backgroundColor: '#ffffff',
     useCORS: true
   });
 
-  const imgData = canvas.toDataURL('image/jpeg', 0.96);
+  const imgData = canvas.toDataURL('image/jpeg', 0.1);
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF('p', 'mm', 'a4');
   const pageW = 210;
@@ -2887,6 +2887,7 @@ init();
 </script>
 </body>
 </html>
+
 
 
 
