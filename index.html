@@ -2677,7 +2677,7 @@ async function buildReportPDFBlob(id){
   // ... (الكود السابق داخل الدالة يبقى كما هو حتى نصل إلى هنا) ...
 
   const canvas = await html2canvas(pdfWrap, {
-    scale: 4, // تم الرفع من 2 إلى 4 للحصول على دقة فائقة (Ultra HD)
+    scale: 3, // تم الرفع من 2 إلى 4 للحصول على دقة فائقة (Ultra HD)
     backgroundColor: '#ffffff',
     useCORS: true,
     logging: false
@@ -2891,6 +2891,7 @@ init();
 </script>
 </body>
 </html>
+
 
 
 
