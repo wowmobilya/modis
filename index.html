@@ -2680,7 +2680,7 @@ async function buildReportPDFBlob(id){
     useCORS: true
   });
 
-  const imgData = canvas.toDataURL('image/jpeg', 0.1);
+  const imgData = canvas.toDataURL('image/jpeg', 1.0);
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF('p', 'mm', 'a4');
   const pageW = 210;
@@ -2887,6 +2887,7 @@ init();
 </script>
 </body>
 </html>
+
 
 
 
