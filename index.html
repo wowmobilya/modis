@@ -1029,6 +1029,37 @@
     .lb-prev { left: 16px; }
     .lb-next { right: 16px; }
     .lb-nav .app-icon { width: 20px; height: 20px; }
+
+    /* Activation Modal Styles (نظام التفعيل) */
+    .activation-overlay {
+      position: fixed; inset: 0; z-index: 99999;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+    }
+    .activation-overlay.show { opacity: 1; pointer-events: auto; }
+    .activation-card {
+      background: var(--bg-soft); width: 90%; max-width: 360px;
+      border-radius: 28px; padding: 24px; text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border: 1px solid var(--line);
+    }
+    .activation-icon {
+      width: 64px; height: 64px; background: rgba(37,99,235,0.1); color: var(--accent-2);
+      border-radius: 20px; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; border: 1px solid rgba(37,99,235,0.2);
+    }
+    .activation-icon .app-icon { width: 32px; height: 32px; }
+    .activation-title { font-size: 20px; font-weight: 900; margin-bottom: 8px; color: var(--text); }
+    .activation-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; margin-bottom: 20px; }
+    .activation-input {
+      width: 100%; padding: 14px; border-radius: 16px; border: 2px solid var(--line);
+      background: var(--panel-2); color: var(--text); font-size: 16px; font-weight: bold;
+      text-align: center; outline: none; margin-bottom: 16px; letter-spacing: 2px;
+    }
+    .activation-input:focus { border-color: var(--accent-2); }
+    .activation-error { color: var(--danger); font-size: 12px; font-weight: bold; margin-bottom: 16px; display: none; }
   </style>
 </head>
 <body>
@@ -1334,6 +1365,7 @@
   </button>
 </div>
 
+<!-- Delete Modal -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -1346,6 +1378,7 @@
   </div>
 </div>
 
+<!-- Clear All Modal -->
 <div class="modal-overlay" id="clearModal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -1355,6 +1388,26 @@
       <button class="btn btn-outline" onclick="closeModal('clearModal')">İptal</button>
       <button class="btn btn-danger" onclick="clearAllReports()">Tümünü Sil</button>
     </div>
+  </div>
+</div>
+
+<!-- Activation Modal (نافذة التفعيل) -->
+<div class="activation-overlay" id="activationModal">
+  <div class="activation-card">
+    <div class="activation-icon">
+      <span class="app-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      </span>
+    </div>
+    <h3 class="activation-title">Deneme Süresi Doldu</h3>
+    <p class="activation-desc">Uygulamayı 30 gündür kullanıyorsunuz. Kullanmaya devam etmek için lütfen kalıcı aktivasyon kodunu girin.</p>
+    <input type="text" id="actCodeInput" class="activation-input" placeholder="Aktivasyon Kodu" />
+    <div id="actError" class="activation-error"></div>
+    <button class="btn btn-primary" onclick="verifyActivation()" style="margin-bottom:10px;">Kilidi Aç</button>
+    <button class="wa-btn" onclick="openWhatsApp()">
+      <span id="actWaIconWrap"></span>
+      <span>WhatsApp'tan Kod İste</span>
+    </button>
   </div>
 </div>
 
@@ -1402,7 +1455,7 @@ const Icons = {
   inspect: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="m20 20-4-4"></path></svg></span>`,
   file: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"></path><path d="M14 2v5h5"></path></svg></span>`,
   info: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 10v6"></path><path d="M12 7h.01"></path></svg></span>`,
-  whatsapp: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><path d="M20 11.5A8.5 8.5 0 0 1 7.7 19l-3.7 1 1.1-3.5A8.5 8.5 0 1 1 20 11.5Z"></path><path d="M9.7 8.9c.2-.4.4-.4.7-.4h.5c.2 0 .4 0 .5.4.2.5.7 1.6.8 1.7.1.2.1.3 0 .5-.1.1-.2.3-.4.4-.1.1-.2.2-.3.4-.1.1-.2.2 0 .5.2.3.8 1.3 1.8 2 .9.8 1.7 1 2 .9.2-.1.4-.5.5-.7.1-.2.3-.2.5-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.4s-.1 1-.7 1.4c-.6.4-1.4.6-1.6.6s-1.5-.2-2.9-1.1a11.6 11.6 0 0 1-3.4-4.1c-.9-1.6-.9-2.9-.7-3.3Z"></path></svg></span>`
+  whatsapp: () => `<span class="app-icon"><svg viewBox="0 0 24 24"><path d="M20 11.5A8.5 8.5 0 0 1 7.7 19l-3.7 1 1.1-3.5A8.5 8.5 0 1 1 20 11.5Z"></path><path d="M9.7 8.9c.2-.4.4-.4.7-.4h.5c.2 0 .4 0 .5.4.2.5.7 1.6.8 1.7.1.2.1.3 0 .5-.1.1-.2.3-.4.4-.1.1-.2.2-.3.4-.1.1-.2.2-.3.4-.1.1-.2.2 0 .5.2.3.8 1.3 1.8 2 .9.8 1.7 1 2 .9.2-.1.4-.5.5-.7.1-.2.3-.2.5-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.4s-.1 1-.7 1.4c-.6.4-1.4.6-1.6.6s-1.5-.2-2.9-1.1a11.6 11.6 0 0 1-3.4-4.1c-.9-1.6-.9-2.9-.7-3.3Z"></path></svg></span>`
 };
 
 function icon(name){
@@ -1450,6 +1503,9 @@ function setStaticIcons(){
 
   const waIconWrap = document.getElementById('waIconWrap');
   if(waIconWrap) waIconWrap.innerHTML = icon('whatsapp');
+
+  const actWaIconWrap = document.getElementById('actWaIconWrap');
+  if(actWaIconWrap) actWaIconWrap.innerHTML = icon('whatsapp');
 }
 
 /* =========================================================
@@ -1575,6 +1631,49 @@ const statusInfo = {
 };
 
 /* =========================================================
+   Activation System (نظام التفعيل)
+========================================================= */
+const ACTIVATION_CODE = "mutez2026";
+const TRIAL_DAYS = 30;
+
+async function checkActivationStatus() {
+  const isActivated = await idbGet('settings', 'isActivated');
+  if (isActivated && isActivated.value === true) return true;
+
+  let firstUse = await idbGet('settings', 'firstUseDate');
+  const now = Date.now();
+
+  if (!firstUse) {
+    await idbPut('settings', { key: 'firstUseDate', value: now });
+    firstUse = { value: now };
+  }
+
+  const daysPassed = (now - firstUse.value) / (1000 * 60 * 60 * 24);
+  
+  if (daysPassed >= TRIAL_DAYS) {
+    document.getElementById('activationModal').classList.add('show');
+    return false; // Trial expired
+  }
+  return true; // Still in trial
+}
+
+async function verifyActivation() {
+  const inputEl = document.getElementById('actCodeInput');
+  const errorEl = document.getElementById('actError');
+  const code = inputEl.value.trim();
+
+  if (code === ACTIVATION_CODE) {
+    await idbPut('settings', { key: 'isActivated', value: true });
+    document.getElementById('activationModal').classList.remove('show');
+    errorEl.style.display = 'none';
+    toast('Uygulama kalıcı olarak etkinleştirildi! 🎉', 3000);
+  } else {
+    errorEl.textContent = 'Hatalı veya geçersiz kod!';
+    errorEl.style.display = 'block';
+  }
+}
+
+/* =========================================================
    Helpers
 ========================================================= */
 function toast(msg, dur=2500){
@@ -1628,6 +1727,7 @@ async function fileToProcessedBlob(file, maxW=1600, quality=.82){
     }
 
     const img = new Image();
+    
     const tempUrl = URL.createObjectURL(file);
 
     img.onload = ()=>{
@@ -2674,16 +2774,13 @@ async function buildReportPDFBlob(id){
     </div>
   `;
 
-  // ... (الكود السابق داخل الدالة يبقى كما هو حتى نصل إلى هنا) ...
-
   const canvas = await html2canvas(pdfWrap, {
-    scale: 3, // تم الرفع من 2 إلى 4 للحصول على دقة فائقة (Ultra HD)
+    scale: 3, 
     backgroundColor: '#ffffff',
     useCORS: true,
     logging: false
   });
 
-  // تم رفع جودة الصورة إلى 1.0 (أعلى جودة 100%)
   const imgData = canvas.toDataURL('image/jpeg', 1.0); 
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF('p', 'mm', 'a4');
@@ -2766,12 +2863,22 @@ async function shareReportFile(id){
 }
 
 /* =========================================================
-   Init & Service Worker
+   Init & Service Worker (تم إضافة فحص التفعيل هنا)
 ========================================================= */
 async function init(){
   try{
     setStaticIcons();
     await openDB();
+
+    // فحص التفعيل قبل تحميل التطبيق
+    const canProceed = await checkActivationStatus();
+    if(!canProceed) {
+      setTimeout(()=>{
+        document.getElementById('splash').classList.add('hide');
+        setTimeout(()=>document.getElementById('splash').style.display='none', 600);
+      }, 1900);
+      return; // إيقاف تحميل باقي البيانات إذا انتهت الفترة
+    }
 
     const theme = await idbGet('settings','theme');
     const cname = await idbGet('settings','companyName');
@@ -2877,6 +2984,29 @@ async function init(){
   }
 }
 
+// تعديل دالة التحقق لإعادة تحميل الصفحة بعد التفعيل الناجح
+async function verifyActivation() {
+  const inputEl = document.getElementById('actCodeInput');
+  const errorEl = document.getElementById('actError');
+  const code = inputEl.value.trim();
+
+  if (code === ACTIVATION_CODE) {
+    await idbPut('settings', { key: 'isActivated', value: true });
+    document.getElementById('activationModal').classList.remove('show');
+    errorEl.style.display = 'none';
+    toast('Uygulama kalıcı olarak etkinleştirildi! 🎉', 3000);
+    
+    // إعادة تحميل الصفحة لتشغيل التطبيق بشكل طبيعي
+    setTimeout(() => {
+      location.reload();
+    }, 1500);
+
+  } else {
+    errorEl.textContent = 'Hatalı veya geçersiz kod!';
+    errorEl.style.display = 'block';
+  }
+}
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').then((registration) => {
@@ -2891,11 +3021,4 @@ init();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
 
