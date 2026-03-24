@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mobilya-takip-v8';
+const CACHE_NAME = 'mobilya-takip-v9';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
