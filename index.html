@@ -1363,12 +1363,13 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
       </div>
 
       <div class="settings-item" id="departmentsManageBtn">
-        <div class="si-icon" id="deptManageIconWrap"></div>
-        <div class="si-main">
-          <div class="t">Bölüm Seçimi</div>
-          <div class="s">Bölüm yönetim sayfasını aç</div>
-        </div>
-      </div>
+  <div class="si-icon" id="deptManageIconWrap"></div>
+  <div class="si-main">
+    <div class="t" data-i18n="dept_manage_title">Bölüm Seçimi</div>
+    <div class="s" data-i18n="dept_manage_desc">Bölüm yönetim sayfasını aç</div>
+  </div>
+</div>
+
 
       <div class="settings-item" id="exportAllBtn">
         <div class="si-icon" id="settingsExportIconWrap"></div>
@@ -1431,20 +1432,22 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
       <div class="dept-page-head">
         <button class="icon-btn" id="deptPageBackBtn"></button>
         <div>
-          <div class="dept-page-title">Bölüm Seçimi</div>
-          <div class="dept-page-sub">Bölümleri görüntüle, düzenle ve yönet</div>
+          <div class="dept-page-title" data-i18n="dept_page_title">Bölüm Seçimi</div>
+<div class="dept-page-sub" data-i18n="dept_page_sub">Bölümleri görüntüle, düzenle ve yönet</div>
+
         </div>
       </div>
 
       <div class="dept-toolbar">
         <button class="btn btn-primary" id="openDeptCreateBtn">
-          <span id="openDeptCreateBtnIcon"></span>
-          <span>Yeni Bölüm Ekle</span>
-        </button>
+  <span id="openDeptCreateBtnIcon"></span>
+  <span data-i18n="add_new_dept">Yeni Bölüm Ekle</span>
+</button>
+
       </div>
 
       <div class="card">
-        <div class="block-title">Tüm Bölümler</div>
+<div class="block-title" data-i18n="all_departments">Tüm Bölümler</div>
         <div id="deptAdminList" class="dept-admin-list"></div>
       </div>
       <div style="height:8px"></div>
@@ -1486,12 +1489,12 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
     </div>
 
     <div class="form-group">
-      <label class="label">Bölüm Adı</label>
+<label class="label" data-i18n="dept_name">Bölüm Adı</label>
       <input id="deptNameInput" class="input" type="text" placeholder="Ör: CNC Kesim">
     </div>
 
     <div class="form-group">
-      <label class="label">Önizleme</label>
+<label class="label" data-i18n="preview">Önizleme</label>
       <div class="dept-preview">
         <div class="dept-preview-icon" id="deptPreviewIcon" style="background:#dbeafe"></div>
         <div>
@@ -1502,18 +1505,18 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
     </div>
 
     <div class="form-group">
-      <label class="label">Simge Seçimi</label>
+<label class="label" data-i18n="icon_selection">Simge Seçimi</label>
       <div class="icon-picker-grid" id="deptIconPicker"></div>
     </div>
 
     <div class="form-group">
-      <label class="label">Renk Seçimi</label>
+<label class="label" data-i18n="color_selection">Renk Seçimi</label>
       <div class="color-palette" id="deptColorPicker"></div>
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-outline" id="deptResetBtn">Temizle</button>
-      <button class="btn btn-primary" id="deptSaveBtn">Kaydet</button>
+      <button class="btn btn-outline" id="deptResetBtn" data-i18n="clear_btn">Temizle</button>
+<button class="btn btn-primary" id="deptSaveBtn" data-i18n="save_btn">Kaydet</button>
     </div>
   </div>
 </div>
@@ -1849,13 +1852,28 @@ const translations = {
     swipe_edit: "Düzenle",
     swipe_delete: "Sil",
     delete_type_title: "Raporu Kalıcı Olarak Sil",
-    delete_type_desc: "Raporu kalıcı olarak silmek için aşağıya <b>حذف</b> yazın.",
-    delete_type_hint: "Yazmanız gereken kelime: حذف",
+     delete_type_desc: "Raporu kalıcı olarak silmek için aşağıya <b>sil</b> yazın.",
+    delete_type_hint: "Yazmanız gereken kelime: sil",
     delete_forever: "Kalıcı Sil",
     code_used_before: "Bu kod bu cihazda daha önce kullanıldı",
     activation_3months: "Uygulama 3 ay için etkinleştirildi",
     activation_6months: "Uygulama 6 ay için etkinleştirildi",
-    activation_lifetime: "Uygulama ömür boyu etkinleştirildi"
+    activation_lifetime: "Uygulama ömür boyu etkinleştirildi",
+    // أضف هذه الأسطر في نهاية قسم tr
+    dept_manage_title: "Bölüm Seçimi",
+    dept_manage_desc: "Bölüm yönetim sayfasını aç",
+    dept_page_title: "Bölüm Seçimi",
+    dept_page_sub: "Bölümleri görüntüle, düzenle ve yönet",
+    add_new_dept: "Yeni Bölüm Ekle",
+    all_departments: "Tüm Bölümler",
+    dept_name: "Bölüm Adı",
+    dept_name_ph: "Ör: CNC Kesim",
+    preview: "Önizleme",
+    icon_selection: "Simge Seçimi",
+    color_selection: "Renk Seçimi",
+    clear_btn: "Temizle",
+    save_btn: "Kaydet"
+
   },
   ar: {
     app_name: "نظام تتبع أخطاء الإنتاج للأثاث",
@@ -2019,7 +2037,22 @@ const translations = {
     code_used_before: "هذا الكود استُخدم مسبقًا على هذا الجهاز",
     activation_3months: "تم تفعيل التطبيق لمدة 3 أشهر",
     activation_6months: "تم تفعيل التطبيق لمدة 6 أشهر",
-    activation_lifetime: "تم تفعيل التطبيق مدى الحياة"
+    activation_lifetime: "تم تفعيل التطبيق مدى الحياة",
+    // أضف هذه الأسطر في نهاية قسم ar
+    dept_manage_title: "إدارة الأقسام",
+    dept_manage_desc: "فتح صفحة إدارة وتعديل الأقسام",
+    dept_page_title: "إدارة الأقسام",
+    dept_page_sub: "عرض، تعديل، وإدارة أقسام الإنتاج",
+    add_new_dept: "إضافة قسم جديد",
+    all_departments: "كل الأقسام",
+    dept_name: "اسم القسم",
+    dept_name_ph: "مثال: قسم القص",
+    preview: "معاينة",
+    icon_selection: "اختيار الرمز",
+    color_selection: "اختيار اللون",
+    clear_btn: "مسح",
+    save_btn: "حفظ"
+
   }
 };
 
@@ -2736,6 +2769,7 @@ async function setLanguage(lang, save=true){
   $('settCompany').placeholder = currentLang === 'ar' ? 'اسم الشركة...' : 'Şirket adı...';
   $('actCodeInput').placeholder = t('activation_placeholder');
   $('lbImg').alt = t('lightbox_big_photo');
+  $('deptNameInput').placeholder = t('dept_name_ph');
 
   $('annotTitle').textContent = t('annot_title');
   $('annotSub').textContent = t('annot_sub');
@@ -2776,7 +2810,7 @@ function updateLanguageToggleUI(){
   const langToggle = $('langToggle');
   if(currentLang === 'ar') langToggle.classList.add('on');
   else langToggle.classList.remove('on');
-  $('currentLanguageLabel').textContent = currentLang === 'ar' ? 'العربية' : 'Türkçe';
+  $('currentLanguageLabel').textContent = currentLang === 'ar' ? ' التركية' : 'Arapça';
 }
 function updateTextsAfterLanguage(){
   $('saveBtn').innerHTML = `${icon(editingId ? 'edit' : 'pdf')} <span>${editingId ? t('report_update_btn') : t('report_saved_btn')}</span>`;
