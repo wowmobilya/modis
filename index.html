@@ -1194,7 +1194,6 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
           <div>
             <div class="hero-title" data-i18n="hero_title">Üretim Hata Takip Paneli</div>
             <div class="hero-sub" data-i18n="hero_sub">
-              Bugünkü üretim raporlarını hızlıca görüntüleyin, yeni hata oluşturun ve PDF olarak paylaşın.
             </div>
           </div>
           <div class="hero-chip">PRO</div>
@@ -1309,7 +1308,7 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
     <section class="page" id="page-reports">
       <div class="search">
         <span id="searchIconWrap"></span>
-        <input id="searchInput" type="text" placeholder="Rapor ara..." />
+        <input id="searchInput" type="text" placeholder="...Rapor ara..." />
       </div>
       <div class="chips" id="chipsWrap"></div>
       <div id="reportsList" class="mini-list"></div>
@@ -1504,10 +1503,26 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
       </div>
     </div>
 
+          <div class="form-group">
+      <label class="label">صورة القسم (اختياري كبديل للرمز)</label>
+      <div style="position: relative;">
+        <div class="logo-upload" id="deptImageUpload" style="height: 80px; margin-bottom: 12px; cursor: pointer;">
+          <!-- سيتم تحديث المحتوى عبر الجافاسكربت -->
+        </div>
+        <!-- زر الحذف (مخفي افتراضياً) -->
+        <button type="button" class="remove-photo hidden" id="removeDeptImageBtn">
+          <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="M6 6l12 12"></path></svg></span>
+        </button>
+      </div>
+      <input type="file" id="deptImageInput" accept="image/*" class="hidden">
+    </div>
+
+
     <div class="form-group">
-<label class="label" data-i18n="icon_selection">Simge Seçimi</label>
+      <label class="label" data-i18n="icon_selection">Simge Seçimi</label>
       <div class="icon-picker-grid" id="deptIconPicker"></div>
     </div>
+
 
     <div class="form-group">
 <label class="label" data-i18n="color_selection">Renk Seçimi</label>
@@ -1701,8 +1716,7 @@ const translations = {
     app_name: "Mobilya Üretim Hata Takip Pro",
     app_subtitle: "Mobilya Üretim Hata Takip Pro",
     app_subtitle_upper: "ÜRETİM HATA TAKİP PRO",
-    hero_title: "Üretim Hata Takip Paneli",
-    hero_sub: "Bugünkü üretim raporlarını hızlıca görüntüleyin, yeni hata oluşturun ve PDF olarak paylaşın.",
+    hero_title: "ÜRETIM HATA TAKIP PANELI",
     summary_total: "Toplam Rapor",
     summary_open: "Açık Hata",
     summary_done: "Tamamlandı",
@@ -1732,7 +1746,7 @@ const translations = {
     after_upper: "SONRA",
     save_report: "Raporu Kaydet",
     update_report: "Raporu Güncelle",
-    search_report: "Rapor ara...",
+    search_report: "  Rapor ara...",
     company_info: "Şirket Bilgileri",
     company_name: "Şirket Adı",
     logo: "Logo",
@@ -1881,7 +1895,6 @@ const translations = {
     app_subtitle: "نظام تتبع أخطاء الإنتاج للأثاث",
     app_subtitle_upper: "نظام تتبع أخطاء الإنتاج",
     hero_title: "لوحة متابعة أخطاء الإنتاج",
-    hero_sub: "اعرض تقارير الإنتاج اليومية بسرعة، وأنشئ خطأ جديدًا، وشاركه بصيغة PDF.",
     summary_total: "إجمالي التقارير",
     summary_open: "الأخطاء المفتوحة",
     summary_done: "مكتمل",
@@ -1911,7 +1924,7 @@ const translations = {
     after_upper: "بعد",
     save_report: "حفظ التقرير",
     update_report: "تحديث التقرير",
-    search_report: "ابحث عن تقرير...",
+    search_report: "  إبحث عن تقرير...",
     company_info: "معلومات الشركة",
     company_name: "اسم الشركة",
     logo: "الشعار",
@@ -2220,6 +2233,7 @@ let afterPhotos = [null, null, null];
 let deptEditingId = null;
 let deptFormIcon = 'file';
 let deptFormColor = '#dbeafe';
+let deptFormImage = null; // متغير جديد لحفظ الصورة
 
 const DEFAULT_DEPARTMENTS = [
   { id:'dept-1', name:'İmalat Kesim', icon:'scissors', bg:'#fee2e2', ar:'قص الإنتاج', order:0 },
@@ -2377,6 +2391,8 @@ function openDeptForm(mode='create', id=null){
     deptEditingId = dept.id;
     deptFormIcon = dept.icon || 'file';
     deptFormColor = dept.bg || '#dbeafe';
+    deptFormImage = dept.image || null;
+
     $('deptNameInput').value = dept.name || '';
     $('deptFormTitle').textContent = currentLang === 'ar' ? 'تعديل القسم' : 'Bölüm Düzenle';
     $('deptFormSub').textContent = currentLang === 'ar' ? 'بيانات القسم الحالية جاهزة للتعديل' : 'Mevcut bölüm bilgilerini düzenleyin';
@@ -2384,6 +2400,8 @@ function openDeptForm(mode='create', id=null){
     deptEditingId = null;
     deptFormIcon = 'file';
     deptFormColor = '#dbeafe';
+    deptFormImage = null;
+
     $('deptNameInput').value = '';
     $('deptFormTitle').textContent = currentLang === 'ar' ? 'قسم جديد' : 'Yeni Bölüm';
     $('deptFormSub').textContent = currentLang === 'ar' ? 'اسم القسم والرمز واللون' : 'Bölüm adı, simge ve renk seçin';
@@ -2401,6 +2419,8 @@ function resetDeptFormInsideModal(){
   deptEditingId = null;
   deptFormIcon = 'file';
   deptFormColor = '#dbeafe';
+  deptFormImage = null;
+
   $('deptNameInput').value = '';
   $('deptFormTitle').textContent = currentLang === 'ar' ? 'قسم جديد' : 'Yeni Bölüm';
   $('deptFormSub').textContent = currentLang === 'ar' ? 'اسم القسم والرمز واللون' : 'Bölüm adı, simge ve renk seçin';
@@ -2408,13 +2428,38 @@ function resetDeptFormInsideModal(){
   renderDeptColorPicker();
   updateDeptPreview();
 }
+
 function updateDeptPreview(){
   const name = $('deptNameInput').value.trim() || (currentLang === 'ar' ? 'قسم جديد' : 'Yeni Bölüm');
   $('deptPreviewName').textContent = name;
-  $('deptPreviewSub').textContent = deptFormIcon;
+  $('deptPreviewSub').textContent = deptFormImage ? 'صورة مخصصة' : deptFormIcon;
   $('deptPreviewIcon').style.background = deptFormColor;
-  $('deptPreviewIcon').innerHTML = icon(deptFormIcon);
+  
+  if (deptFormImage) {
+    $('deptPreviewIcon').innerHTML = `<img src="${deptFormImage}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">`;
+  } else {
+    $('deptPreviewIcon').innerHTML = icon(deptFormIcon);
+  }
+  
+  const uploadArea = $('deptImageUpload');
+  const removeBtn = $('removeDeptImageBtn'); // جلب زر الحذف
+  
+  if (uploadArea) {
+    if (deptFormImage) {
+      uploadArea.innerHTML = `<img src="${deptFormImage}" style="width:100%;height:100%;object-fit:contain;">`;
+      if(removeBtn) removeBtn.classList.remove('hidden'); // إظهار زر الحذف
+    } else {
+      uploadArea.innerHTML = `
+        <div style="text-align:center;color:var(--muted);font-size:12px;font-weight:800">
+          <div style="display:flex;justify-content:center;font-size:24px;margin-bottom:4px">${icon('image')}</div>
+          <span>اضغط لتحميل صورة</span>
+        </div>
+      `;
+      if(removeBtn) removeBtn.classList.add('hidden'); // إخفاء زر الحذف
+    }
+  }
 }
+
 function renderDeptIconPicker(){
   $('deptIconPicker').innerHTML = DEPT_ICON_PRESETS.map(name=>`
     <button class="icon-pick ${deptFormIcon===name?'active':''}" type="button" data-icon-pick="${name}">
@@ -2430,9 +2475,10 @@ function renderDeptColorPicker(){
 function renderDeptAdminList(){
   $('deptAdminList').innerHTML = departments.map(d=>`
     <div class="dept-admin-item">
-      <div class="dept-admin-icon" style="background:${d.bg}">
-        ${icon(d.icon || 'file')}
+           <div class="dept-admin-icon" style="background:${d.bg}">
+        ${d.image ? `<img src="${d.image}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">` : icon(d.icon || 'file')}
       </div>
+
       <div class="dept-admin-main">
         <div class="dept-admin-name">${escapeHtml(d.name)}</div>
         <div class="dept-admin-meta">${escapeHtml(d.icon || 'file')}</div>
@@ -2465,7 +2511,9 @@ async function saveDepartment(){
       ...old,
       name,
       icon: deptFormIcon,
-      bg: deptFormColor
+      bg: deptFormColor,
+      image: deptFormImage // السطر الجديد
+
     };
     await idbPut('departments', updated);
 
@@ -2480,6 +2528,7 @@ async function saveDepartment(){
       name,
       icon: deptFormIcon,
       bg: deptFormColor,
+      image: deptFormImage, // السطر الجديد
       ar: '',
       order: departments.length
     };
@@ -2871,7 +2920,9 @@ function goBack(){
 function renderDeptButtons(){
   $('deptGrid').innerHTML = departments.map(d=>`
     <button class="dept-btn ${selectedDept===d.name?'selected':''}" data-dept="${escapeHtml(d.name)}">
-      <span class="di">${icon(d.icon || 'file')}</span>
+      <span class="di" style="${d.image ? 'width:34px;height:34px;border-radius:8px;overflow:hidden;' : ''}">
+        ${d.image ? `<img src="${d.image}" style="width:100%;height:100%;object-fit:cover;">` : icon(d.icon || 'file')}
+      </span>
       <span>${escapeHtml(deptLabel(d.name))}</span>
     </button>
   `).join('');
@@ -3023,7 +3074,9 @@ function reportRowHTML(r){
 
       <div class="swipe-front">
         <div class="report-row" data-open-id="${escapeHtml(r.id)}">
-          <div class="rr-icon" style="background:${cfg.bg};">${icon(cfg.icon || 'file')}</div>
+      <div class="detail-emoji" style="width:52px;height:52px;border-radius:16px;background:${cfg.bg};display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px;">
+        ${cfg.image ? `<img src="${cfg.image}" style="width:100%;height:100%;object-fit:cover;">` : icon(cfg.icon || 'file')}
+      </div>
           <div class="rr-main">
             <div class="rr-title">${escapeHtml(r.title || t('untitled'))}</div>
             <div class="rr-meta">${escapeHtml(deptLabel(r.dept || ''))} • ${escapeHtml(fmtDate(r.date))}${r.person ? ' • ' + escapeHtml(r.person) : ''}</div>
@@ -3610,8 +3663,11 @@ async function openDetail(id, push=true){
       <button class="icon-btn" data-delete-id="${escapeHtml(r.id)}">${icon('trash')}</button>
     </div>
 
-    <div class="detail-card">
-      <div class="detail-emoji">${icon(cfg.icon || 'file')}</div>
+        <div class="detail-card">
+      <div class="detail-emoji" style="${cfg.image ? `width:52px;height:52px;border-radius:16px;background:${cfg.bg};display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px;` : ''}">
+        ${cfg.image ? `<img src="${cfg.image}" style="width:100%;height:100%;object-fit:cover;">` : icon(cfg.icon || 'file')}
+      </div>
+
       <div class="detail-title">${escapeHtml(r.title || t('untitled'))}</div>
       <div class="detail-sub">${escapeHtml(deptLabel(r.dept || '-'))} • ${escapeHtml(fmtDate(r.date))}${r.person ? ' • ' + escapeHtml(r.person) : ''}</div>
 
@@ -3965,6 +4021,8 @@ async function createPdfRenderHTML(report){
   const r = ensureStatusHistory({...report});
   const beforeList = (r.beforePhotos || []).filter(Boolean);
   const afterList = (r.afterPhotos || []).filter(Boolean);
+  const cfg = deptVisual(r.dept); // جلب بيانات القسم بما فيها الصورة
+
 
   const logoUrl = companyLogoDataUrl || '';
   const beforeHTML = (await Promise.all(beforeList.map(async (b,i)=>`<div style="position:relative"><img src="${await blobToDataURL(b)}" alt="${t('before')}"><div style="position:absolute;bottom:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:8px;padding:2px 4px;border-radius:2px;">${i+1}</div></div>`))).join('');
@@ -3997,7 +4055,14 @@ async function createPdfRenderHTML(report){
         <div class="pdf-sec-title">${escapeHtml(t('report_info'))}</div>
         <div class="pdf-grid">
           <div class="pdf-item"><div class="k">${escapeHtml(t('error_title'))}</div><div class="v">${escapeHtml(r.title || t('no_value'))}</div></div>
-          <div class="pdf-item"><div class="k">${escapeHtml(t('department'))}</div><div class="v">${escapeHtml(deptLabel(r.dept || t('no_value')))}</div></div>
+          <div class="pdf-item">
+            <div class="k">${escapeHtml(t('department'))}</div>
+            <div class="v" style="display:flex; align-items:center; gap:6px;">
+              ${cfg.image ? `<img src="${cfg.image}" style="width:22px; height:22px; border-radius:4px; object-fit:cover; border:1px solid #e5e7eb; flex-shrink:0;">` : ''}
+              <span>${escapeHtml(deptLabel(r.dept || t('no_value')))}</span>
+            </div>
+          </div>
+
           <div class="pdf-item"><div class="k">${escapeHtml(t('status'))}</div><div class="v">${escapeHtml(statusText(r.status || t('no_value')))}</div></div>
           <div class="pdf-item"><div class="k">${escapeHtml(t('priority'))}</div><div class="v">${escapeHtml(priorityText(r.priority || t('no_value')))}</div></div>
           <div class="pdf-item"><div class="k">${escapeHtml(t('date'))}</div><div class="v">${escapeHtml(fmtDate(r.date))}</div></div>
@@ -4504,6 +4569,46 @@ function bindStaticEvents(){
     const range = e.target.closest('.detail-ba-range');
     if(range) updateDetailBA(range.value, range.dataset.index);
   });
+
+
+  // برمجة رفع صورة القسم
+  const deptImgUpload = $('deptImageUpload');
+  const deptImgInput = $('deptImageInput');
+  if(deptImgUpload && deptImgInput) {
+    deptImgUpload.addEventListener('click', () => deptImgInput.click());
+    deptImgInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if(!file) return;
+      try {
+        // ضغط الصورة (عرض 300 بكسل كافٍ جداً للأيقونات، وجودة 0.8)
+        const blob = await fileToProcessedBlob(file, 300, 0.8);
+        deptFormImage = await blobToDataURL(blob); // تحويلها لـ Base64 لتُحفظ بسهولة
+        updateDeptPreview();
+      } catch(err) {
+        console.error(err);
+        toast(t('photo_failed'));
+      } finally {
+        e.target.value = '';
+      }
+    });
+  }
+
+
+   // برمجة زر حذف الصورة
+  if (removeDeptImageBtn) {
+    removeDeptImageBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // لمنع فتح نافذة اختيار الملفات عند الضغط على زر الحذف
+      deptFormImage = null; // تفريغ متغير الصورة
+      if(deptImgInput) deptImgInput.value = ''; // تصفير حقل الإدخال
+      updateDeptPreview(); // تحديث المعاينة للعودة للرمز الافتراضي
+    });
+  }
+
+
+
+
+
+
 
   initSwipeDelegation($('recentList'));
   initSwipeDelegation($('reportsList'));
