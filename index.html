@@ -421,6 +421,23 @@ body{display:flex;justify-content:center;align-items:stretch}
 .photo-tab.active{
   border-color:var(--accent-2);background:var(--accent-soft);color:var(--accent-2);
 }
+
+/* تخصيص اللون الأخضر لتبويب SONRA */
+.photo-tab[data-tab="after"].active {
+  border-color: var(--success);
+  background: rgba(22, 163, 74, 0.1);
+  color: var(--success);
+}
+
+/* تخصيص اللون الأحمر لتبويب ÖNCE (اختياري) */
+.photo-tab[data-tab="before"].active {
+  border-color: var(--danger);
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger);
+}
+
+
+
 .photo-tab .app-icon{width:14px;height:14px}
 
 .photo-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(92px, 1fr));gap:8px}
@@ -445,12 +462,15 @@ body{display:flex;justify-content:center;align-items:stretch}
 .ba-stage{
   position:relative;overflow:hidden;border-radius:20px;aspect-ratio:16/10;background:var(--panel-2);
   border:1px solid var(--line);
+  touch-action: none; /* لمنع تمرير الشاشة عند السحب على الصورة */
+  cursor: ew-resize; /* تغيير شكل مؤشر الماوس للسحب */
 }
-.ba-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--panel-2)}
+.ba-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--panel-2);pointer-events:none;}
 .ba-after{clip-path:inset(0 50% 0 0)}
 .ba-line{
   position:absolute;top:0;bottom:0;left:50%;width:3px;background:#fff;transform:translateX(-50%);
   box-shadow:0 0 0 1px rgba(0,0,0,.08);
+  pointer-events:none; /* لمنع تداخل الخط مع اللمس */
 }
 .ba-knob{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:999px;
@@ -460,9 +480,14 @@ body{display:flex;justify-content:center;align-items:stretch}
 .ba-tag{
   position:absolute;bottom:10px;padding:5px 10px;border-radius:999px;background:rgba(0,0,0,.5);
   color:#fff;font-size:10px;font-weight:900;
+  pointer-events:none;
 }
-.ba-tag.left{left:10px}
-.ba-tag.right{right:10px}
+.ba-tag.left{left:10px; background-color: var(--danger);}
+.ba-tag.right{right:10px; background-color: var(--success);}
+
+/* إخفاء شريط السحب بدلاً من حذفه */
+.range{width:100%;margin-top:10px; display: none !important;}
+
 .range{width:100%;margin-top:10px}
 
 .btn{
@@ -781,7 +806,7 @@ body{display:flex;justify-content:center;align-items:stretch}
 .annot-sub{font-size:11px;color:var(--muted);margin-top:3px}
 .annot-tools{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  grid-template-columns:repeat(5,1fr); /* تم التغيير إلى 5 لأن زراً واحداً سيكون مخفياً دائماً */
   gap:8px;
   padding:12px 14px;
   border-bottom:1px solid var(--line);
@@ -1146,7 +1171,7 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
     border-radius:0;
   }
   .annot-head{padding-top:calc(14px + env(safe-area-inset-top))}
-  .annot-tools{grid-template-columns:repeat(2,1fr)}
+  .annot-tools{grid-template-columns:repeat(3,1fr)} /* تم التغيير إلى 3 */
   .annot-stage{min-height:260px}
   .annot-actions{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
   .icon-picker-grid{grid-template-columns:repeat(4,1fr)}
@@ -1615,14 +1640,22 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
       </button>
     </div>
 
-    <div class="annot-tools">
-      <button class="annot-tool active" id="toolCircleBtn" data-tool="circle">
+        <div class="annot-tools">
+      <button class="annot-tool" id="toolCircleBtn" data-tool="circle">
         <span class="app-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"></circle></svg></span>
         <span id="toolCircleText">Daire</span>
       </button>
       <button class="annot-tool" id="toolArrowBtn" data-tool="arrow">
         <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M4 20L20 4"></path><path d="M13 4h7v7"></path></svg></span>
         <span id="toolArrowText">Ok</span>
+      </button>
+      <button class="annot-tool" id="toolCrossBtn" data-tool="cross">
+        <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="M6 6l12 12"></path></svg></span>
+        <span id="toolCrossText">Çarpı</span>
+      </button>
+      <button class="annot-tool" id="toolCheckBtn" data-tool="check">
+        <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg></span>
+        <span id="toolCheckText">Onay</span>
       </button>
       <button class="annot-tool" id="toolClearBtn">
         <span class="app-icon"><svg viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path></svg></span>
@@ -1633,6 +1666,7 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
         <span id="toolUndoText">Geri</span>
       </button>
     </div>
+
 
     <div class="annot-stage-wrap">
       <div class="annot-stage" id="annotStage">
@@ -2836,6 +2870,8 @@ async function setLanguage(lang, save=true){
   $('toolUndoText').textContent = t('annot_undo');
   $('annotCancelBtn').textContent = t('annot_cancel');
   $('annotSaveBtn').textContent = t('annot_save');
+  $('toolCrossText').textContent = currentLang === 'ar' ? 'خطأ' : 'Çarpı';
+  $('toolCheckText').textContent = currentLang === 'ar' ? 'صح' : 'Onay';
 
   $('deleteTypeTitle').textContent = t('delete_type_title');
   $('deleteTypeDesc').innerHTML = t('delete_type_desc');
@@ -3195,7 +3231,7 @@ function initSwipeDelegation(container){
     const x = Number(item.dataset.x || 0);
     
     const openThreshold = 60; // مسافة سحب بسيطة لتفعيل الفتح
-    const openX = 290; // مسافة كافية لإظهار الأزرار الأربعة معاً
+    const openX = 300; // مسافة كافية لإظهار الأزرار الأربعة معاً
 
     // إذا تم السحب لليمين أكثر من المسافة المطلوبة، افتح القائمة
     if(x >= openThreshold) setSwipeX(item, openX, true);
@@ -3323,6 +3359,9 @@ let annotCurrent = null;
 function initAnnotationControls(){
   $('toolCircleBtn').addEventListener('click', ()=>setAnnotTool('circle'));
   $('toolArrowBtn').addEventListener('click', ()=>setAnnotTool('arrow'));
+  $('toolCrossBtn').addEventListener('click', ()=>setAnnotTool('cross'));
+  $('toolCheckBtn').addEventListener('click', ()=>setAnnotTool('check'));
+
   $('toolClearBtn').addEventListener('click', ()=>{
     annotShapes = [];
     redrawAnnotationCanvas();
@@ -3358,7 +3397,17 @@ async function openAnnotationModal(blob, type, index){
   annotIsDrawing = false;
   annotStart = null;
   annotCurrent = null;
-  setAnnotTool('circle');
+  
+  // 💡 إخفاء وإظهار الأزرار وتحديد الأداة الافتراضية بناءً على نوع الصورة
+  if (type === 'before') {
+    $('toolCrossBtn').style.display = 'flex'; // إظهار الخطأ
+    $('toolCheckBtn').style.display = 'none'; // إخفاء الصح
+    setAnnotTool('cross'); // اختيار الخطأ كافتراضي
+  } else {
+    $('toolCrossBtn').style.display = 'none'; // إخفاء الخطأ
+    $('toolCheckBtn').style.display = 'flex'; // إظهار الصح
+    setAnnotTool('check'); // اختيار الصح كافتراضي
+  }
 
   const base = await blobToDataURL(blob);
   const img = $('annotImage');
@@ -3416,35 +3465,115 @@ function drawShapePreview(){
 }
 function drawAnnotationShape(shape){
   annotCtx.save();
-  annotCtx.lineWidth = Math.max(6, annotCanvas.width * 0.006);
-  annotCtx.strokeStyle = '#ff1f1f';
-  annotCtx.fillStyle = '#ff1f1f';
+  
+  const mainColor = annotTargetType === 'before' ? '#ef4444' : '#22c55e';
+  const baseLineWidth = Math.max(6, annotCanvas.width * 0.006);
+
   annotCtx.lineCap = 'round';
   annotCtx.lineJoin = 'round';
+  annotCtx.shadowColor = 'rgba(0,0,0,0.4)';
+  annotCtx.shadowBlur = 6;
+  annotCtx.shadowOffsetY = 3;
+
+  const strokeWithOutline = (drawPathFn) => {
+    annotCtx.lineWidth = baseLineWidth + 4;
+    annotCtx.strokeStyle = '#ffffff';
+    drawPathFn();
+    annotCtx.stroke();
+
+    annotCtx.lineWidth = baseLineWidth;
+    annotCtx.strokeStyle = mainColor;
+    drawPathFn();
+    annotCtx.stroke();
+  };
+
   if(shape.tool === 'circle'){
     const centerX = (shape.start.x + shape.end.x) / 2;
     const centerY = (shape.start.y + shape.end.y) / 2;
     const radiusX = Math.abs(shape.end.x - shape.start.x) / 2;
     const radiusY = Math.abs(shape.end.y - shape.start.y) / 2;
-    annotCtx.beginPath();
-    annotCtx.ellipse(centerX, centerY, Math.max(radiusX, 6), Math.max(radiusY, 6), 0, 0, Math.PI * 2);
-    annotCtx.stroke();
-  }else{
+
+    strokeWithOutline(() => {
+      annotCtx.beginPath();
+      annotCtx.ellipse(centerX, centerY, Math.max(radiusX, 6), Math.max(radiusY, 6), 0, 0, Math.PI * 2);
+    });
+
+  } else if(shape.tool === 'cross') {
+    // رسم إشارة الخطأ (X)
+    const minX = Math.min(shape.start.x, shape.end.x);
+    const maxX = Math.max(shape.start.x, shape.end.x);
+    const minY = Math.min(shape.start.y, shape.end.y);
+    const maxY = Math.max(shape.start.y, shape.end.y);
+
+    strokeWithOutline(() => {
+      annotCtx.beginPath();
+      annotCtx.moveTo(minX, minY);
+      annotCtx.lineTo(maxX, maxY);
+      annotCtx.moveTo(maxX, minY);
+      annotCtx.lineTo(minX, maxY);
+    });
+
+  } else if(shape.tool === 'check') {
+    // رسم إشارة الصح (✓)
+    const minX = Math.min(shape.start.x, shape.end.x);
+    const maxX = Math.max(shape.start.x, shape.end.x);
+    const minY = Math.min(shape.start.y, shape.end.y);
+    const maxY = Math.max(shape.start.y, shape.end.y);
+
+    const startX = minX;
+    const startY = minY + (maxY - minY) * 0.55;
+    const midX = minX + (maxX - minX) * 0.35;
+    const midY = maxY;
+    const endX = maxX;
+    const endY = minY;
+
+    strokeWithOutline(() => {
+      annotCtx.beginPath();
+      annotCtx.moveTo(startX, startY);
+      annotCtx.lineTo(midX, midY);
+      annotCtx.lineTo(endX, endY);
+    });
+
+  } else {
+    // رسم السهم
     const start = shape.start;
     const end = shape.end;
-    const headLength = Math.max(18, annotCanvas.width * 0.02);
     const angle = Math.atan2(end.y - start.y, end.x - start.x);
+    const headLength = Math.max(26, annotCanvas.width * 0.035); 
+    
+    const tipX = end.x;
+    const tipY = end.y;
+    const leftX = tipX - headLength * Math.cos(angle - Math.PI / 7);
+    const leftY = tipY - headLength * Math.sin(angle - Math.PI / 7);
+    const rightX = tipX - headLength * Math.cos(angle + Math.PI / 7);
+    const rightY = tipY - headLength * Math.sin(angle + Math.PI / 7);
+    const backCenterX = tipX - (headLength * 0.65) * Math.cos(angle);
+    const backCenterY = tipY - (headLength * 0.65) * Math.sin(angle);
+
+    const stopDist = (headLength * 0.65) + (baseLineWidth / 2);
+    const stopX = tipX - stopDist * Math.cos(angle);
+    const stopY = tipY - stopDist * Math.sin(angle);
+
+    strokeWithOutline(() => {
+      annotCtx.beginPath();
+      annotCtx.moveTo(start.x, start.y);
+      annotCtx.lineTo(stopX, stopY);
+    });
+
     annotCtx.beginPath();
-    annotCtx.moveTo(start.x, start.y);
-    annotCtx.lineTo(end.x, end.y);
-    annotCtx.stroke();
-    annotCtx.beginPath();
-    annotCtx.moveTo(end.x, end.y);
-    annotCtx.lineTo(end.x - headLength * Math.cos(angle - Math.PI / 7), end.y - headLength * Math.sin(angle - Math.PI / 7));
-    annotCtx.lineTo(end.x - headLength * Math.cos(angle + Math.PI / 7), end.y - headLength * Math.sin(angle + Math.PI / 7));
+    annotCtx.moveTo(tipX, tipY);
+    annotCtx.lineTo(leftX, leftY);
+    annotCtx.lineTo(backCenterX, backCenterY);
+    annotCtx.lineTo(rightX, rightY);
     annotCtx.closePath();
+
+    annotCtx.lineWidth = 3;
+    annotCtx.strokeStyle = '#ffffff';
+    annotCtx.stroke();
+    annotCtx.fillStyle = mainColor;
     annotCtx.fill();
   }
+  
   annotCtx.restore();
 }
 async function mergeAnnotatedImageToBlob(){
@@ -4617,6 +4746,58 @@ function bindStaticEvents(){
 
 
 
+  // --- تحكم بالسحب (اللمس والماوس) لصور المقارنة (قبل/بعد) ---
+  let isDraggingBA = false;
+  let currentBAStage = null;
+
+  function handleBAMove(e) {
+    if (!isDraggingBA || !currentBAStage) return;
+    
+    // منع التمرير الافتراضي للشاشة أثناء السحب
+    if (e.type === 'touchmove' && e.cancelable) {
+      e.preventDefault();
+    }
+
+    const rect = currentBAStage.getBoundingClientRect();
+    let clientX = e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
+    
+    let x = clientX - rect.left;
+    let percent = (x / rect.width) * 100;
+    
+    if (percent < 0) percent = 0;
+    if (percent > 100) percent = 100;
+
+    const afterImg = currentBAStage.querySelector('.ba-after');
+    const line = currentBAStage.querySelector('.ba-line');
+    
+    if (afterImg) afterImg.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+    if (line) line.style.left = `${percent}%`;
+  }
+
+  // أحداث الماوس (للكمبيوتر)
+  document.addEventListener('mousedown', (e) => {
+    const stage = e.target.closest('.ba-stage');
+    if (stage) {
+      isDraggingBA = true;
+      currentBAStage = stage;
+      handleBAMove(e);
+    }
+  });
+  document.addEventListener('mousemove', handleBAMove, { passive: false });
+  window.addEventListener('mouseup', () => { isDraggingBA = false; currentBAStage = null; });
+
+  // أحداث اللمس (للهاتف)
+  document.addEventListener('touchstart', (e) => {
+    const stage = e.target.closest('.ba-stage');
+    if (stage) {
+      isDraggingBA = true;
+      currentBAStage = stage;
+    }
+  }, { passive: true });
+  document.addEventListener('touchmove', handleBAMove, { passive: false });
+  window.addEventListener('touchend', () => { isDraggingBA = false; currentBAStage = null; });
+  window.addEventListener('touchcancel', () => { isDraggingBA = false; currentBAStage = null; });
+  // -------------------------------------------------------------
 
 
 
