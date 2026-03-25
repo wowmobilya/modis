@@ -1504,7 +1504,7 @@ html[dir="rtl"] .swipe-zone.left .swipe-actions{flex-direction:row}
     </div>
 
           <div class="form-group">
-      <label class="label">صورة القسم (اختياري كبديل للرمز)</label>
+<label class="label" data-i18n="dept_image_label">Bölüm Resmi</label>
       <div style="position: relative;">
         <div class="logo-upload" id="deptImageUpload" style="height: 80px; margin-bottom: 12px; cursor: pointer;">
           <!-- سيتم تحديث المحتوى عبر الجافاسكربت -->
@@ -1887,7 +1887,10 @@ const translations = {
     icon_selection: "Simge Seçimi",
     color_selection: "Renk Seçimi",
     clear_btn: "Temizle",
-    save_btn: "Kaydet"
+    save_btn: "Kaydet",
+    dept_image_label: "Bölüm Resmi (Simge yerine isteğe bağlı)",
+    custom_image: "Özel Resim",
+    type_delete_error: "Lütfen silme kelimesini doğru yazın"
 
   },
   ar: {
@@ -2065,7 +2068,11 @@ const translations = {
     icon_selection: "اختيار الرمز",
     color_selection: "اختيار اللون",
     clear_btn: "مسح",
-    save_btn: "حفظ"
+    save_btn: "حفظ",
+    dept_image_label: "صورة القسم (اختياري كبديل للرمز)",
+    custom_image: "صورة مخصصة",
+    type_delete_error: "يجب كتابة كلمة حذف بشكل صحيح"
+
 
   }
 };
@@ -2432,7 +2439,7 @@ function resetDeptFormInsideModal(){
 function updateDeptPreview(){
   const name = $('deptNameInput').value.trim() || (currentLang === 'ar' ? 'قسم جديد' : 'Yeni Bölüm');
   $('deptPreviewName').textContent = name;
-  $('deptPreviewSub').textContent = deptFormImage ? 'صورة مخصصة' : deptFormIcon;
+$('deptPreviewSub').textContent = deptFormImage ? t('custom_image') : deptFormIcon;
   $('deptPreviewIcon').style.background = deptFormColor;
   
   if (deptFormImage) {
@@ -2452,7 +2459,7 @@ function updateDeptPreview(){
       uploadArea.innerHTML = `
         <div style="text-align:center;color:var(--muted);font-size:12px;font-weight:800">
           <div style="display:flex;justify-content:center;font-size:24px;margin-bottom:4px">${icon('image')}</div>
-          <span>اضغط لتحميل صورة</span>
+<span>${t('tap_to_upload')}</span>
         </div>
       `;
       if(removeBtn) removeBtn.classList.add('hidden'); // إخفاء زر الحذف
@@ -3188,7 +3195,7 @@ function initSwipeDelegation(container){
     const x = Number(item.dataset.x || 0);
     
     const openThreshold = 60; // مسافة سحب بسيطة لتفعيل الفتح
-    const openX = 320; // مسافة كافية لإظهار الأزرار الأربعة معاً
+    const openX = 280; // مسافة كافية لإظهار الأزرار الأربعة معاً
 
     // إذا تم السحب لليمين أكثر من المسافة المطلوبة، افتح القائمة
     if(x >= openThreshold) setSwipeX(item, openX, true);
@@ -3796,9 +3803,11 @@ function closeDeleteTypeModal(){
   $('deleteTypeModal').classList.remove('show');
 }
 async function confirmTypedDelete(){
-  const val = $('deleteTypeInput').value.trim();
-  if(val !== 'حذف'){
-    toast(currentLang === 'ar' ? 'يجب كتابة كلمة حذف بشكل صحيح' : 'Silmek için "حذف" yazılmalı');
+  const val = $('deleteTypeInput').value.trim().toLowerCase();
+  const expectedWord = currentLang === 'ar' ? 'حذف' : 'sil';
+  
+  if(val !== expectedWord){
+    toast(t('type_delete_error'));
     return;
   }
   if(!typedDeleteId) return;
@@ -4594,7 +4603,8 @@ function bindStaticEvents(){
   }
 
 
-   // برمجة زر حذف الصورة
+  // برمجة زر حذف الصورة
+  const removeDeptImageBtn = $('removeDeptImageBtn'); // السطر الذي كان مفقوداً
   if (removeDeptImageBtn) {
     removeDeptImageBtn.addEventListener('click', (e) => {
       e.stopPropagation(); // لمنع فتح نافذة اختيار الملفات عند الضغط على زر الحذف
