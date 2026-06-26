@@ -1,13 +1,13 @@
 {
-  "name": "Wow Mobilya – Coming Soon",
+  "name": "Wow Mobilya – Çok Yakında",
   "short_name": "Wow Mobilya",
-  "description": "Wow Mobilya – Premium Furniture Solutions. Our new platform is coming soon.",
+  "description": "Wow Mobilya – Premium mobilya çözümleri. Yeni platformumuz çok yakında.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0b0b0c",
-  "theme_color": "#0b0b0c",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "orientation": "portrait-primary",
-  "lang": "en",
+  "lang": "tr",
   "icons": [
     {
       "src": "https://i.ibb.co/mC3mvn8N/images.png",
