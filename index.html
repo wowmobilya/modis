@@ -4,312 +4,435 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="description" content="Wow Mobilya – Çok yakında yeni platformumuzla karşınızdayız." />
   <link rel="manifest" href="./manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet">
   <title>Wow Mobilya – Çok Yakında</title>
 
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --text:    #0f172a;
-      --text2:   #64748b;
-      --text3:   #94a3b8;
-      --line:    #e2e8f0;
-      --accent:  #2563eb;
-      --bg:      #ffffff;
-      --bg2:     #f8fafc;
-      --font:    'Inter', system-ui, sans-serif;
+      --white:   #ffffff;
+      --off:     #f9fafb;
+      --line:    #f0f2f5;
+      --line2:   #e2e8f0;
+      --text:    #0d1117;
+      --text2:   #6b7280;
+      --text3:   #9ca3af;
+      --blue:    #2563eb;
+      --blue2:   #1d4ed8;
+      --blue-s:  #eff6ff;
+      --blue-b:  #dbeafe;
+      --green:   #16a34a;
+      --green-s: #f0fdf4;
+      --green-b: #bbf7d0;
+      --red:     #ef4444;
+      --font:    'Inter', system-ui, -apple-system, sans-serif;
+      --ease:    cubic-bezier(.4,0,.2,1);
     }
 
-    html, body {
-      height: 100%;
+    html {
       font-family: var(--font);
-      background: var(--bg);
+      background: var(--white);
       color: var(--text);
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       min-height: 100dvh;
-      padding: 40px 24px;
+      display: grid;
+      place-items: center;
+      padding: 24px 20px 80px;
+      position: relative;
+      overflow-x: hidden;
     }
 
-    /* ── Top line ── */
-    body::before {
-      content: '';
+    /* ─── Decorative blobs ─── */
+    .blob {
       position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #2563eb, #60a5fa, #2563eb);
-      background-size: 200% 100%;
-      animation: shimmer 3s linear infinite;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob-1 {
+      width: 420px; height: 420px;
+      top: -120px; right: -100px;
+      background: radial-gradient(circle, rgba(37,99,235,.08), transparent 70%);
+    }
+    .blob-2 {
+      width: 360px; height: 360px;
+      bottom: -80px; left: -80px;
+      background: radial-gradient(circle, rgba(37,99,235,.05), transparent 70%);
     }
 
-    @keyframes shimmer {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* ── Wrapper ── */
-    .wrap {
+    /* ─── Card ─── */
+    .card {
+      position: relative;
+      z-index: 1;
       width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 0;
+      max-width: 440px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 40px 32px 36px;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,.03),
+        0 4px 6px rgba(0,0,0,.03),
+        0 20px 60px rgba(0,0,0,.06);
     }
 
-    /* ── Logo ── */
+    @media (max-width: 480px) {
+      .card { padding: 32px 24px 28px; border-radius: 24px; }
+    }
+
+    /* ─── Logo ─── */
     .logo {
-      margin-bottom: 52px;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
     }
 
     .logo img {
-      height: 52px;
+      height: 44px;
       width: auto;
-      display: block;
       object-fit: contain;
+      display: block;
     }
 
-    /* ── Badge ── */
-    .badge {
+    /* ─── Pill badge ─── */
+    .pill {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      border: 1px solid var(--line);
+      gap: 6px;
+      background: var(--blue-s);
+      border: 1px solid var(--blue-b);
       border-radius: 999px;
-      padding: 6px 16px;
+      padding: 5px 14px 5px 10px;
       font-size: 11px;
       font-weight: 600;
-      color: var(--text2);
-      letter-spacing: 1.5px;
+      color: var(--blue);
+      letter-spacing: .8px;
       text-transform: uppercase;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
 
-    .badge-dot {
+    .pill-dot {
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--accent);
-      animation: pulse 1.6s ease-in-out infinite;
+      background: var(--blue);
+      animation: pop 1.8s ease-in-out infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(0.8); }
+    @keyframes pop {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50%      { transform: scale(.6); opacity: .4; }
     }
 
-    /* ── Headline ── */
-    h1 {
-      font-size: clamp(32px, 8vw, 52px);
+    /* ─── Headline ─── */
+    .headline {
+      font-size: clamp(28px, 7vw, 38px);
       font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -1.5px;
+      line-height: 1.15;
+      letter-spacing: -1px;
       color: var(--text);
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
-    h1 span {
-      color: var(--accent);
+    .headline b {
+      font-weight: 800;
+      background: linear-gradient(120deg, var(--blue) 0%, #60a5fa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    p.sub {
-      font-size: 16px;
+    .sub {
+      font-size: 14.5px;
       font-weight: 400;
       color: var(--text2);
       line-height: 1.7;
-      margin-bottom: 52px;
-      max-width: 380px;
+      margin-bottom: 36px;
     }
 
-    /* ── Countdown ── */
+    /* ─── Countdown ─── */
     .countdown {
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 32px;
-      margin-bottom: 52px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 36px;
     }
 
-    .cd-item {
+    .cd-box {
+      background: var(--off);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px 8px 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      transition: border-color .3s var(--ease);
     }
 
+    .cd-box:hover { border-color: var(--blue-b); }
+
     .cd-num {
-      font-size: clamp(40px, 10vw, 64px);
+      font-size: clamp(26px, 6vw, 34px);
       font-weight: 800;
       line-height: 1;
-      letter-spacing: -2px;
+      letter-spacing: -1px;
       color: var(--text);
       font-variant-numeric: tabular-nums;
     }
 
-    .cd-label {
-      font-size: 10px;
+    .cd-lbl {
+      font-size: 9px;
       font-weight: 600;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--text3);
     }
 
-    .cd-sep {
-      font-size: 48px;
-      font-weight: 300;
-      color: var(--line);
-      line-height: 1;
-      padding-top: 4px;
-    }
-
-    /* ── Divider ── */
-    .divider {
-      width: 100%;
+    /* ─── Divider ─── */
+    .sep {
       height: 1px;
       background: var(--line);
-      margin-bottom: 40px;
+      margin: 0 0 28px;
     }
 
-    /* ── Notify ── */
-    .notify-label {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text2);
+    /* ─── Notify ─── */
+    .notify-head {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .notify-sub {
+      font-size: 12.5px;
+      color: var(--text3);
       margin-bottom: 14px;
+      line-height: 1.5;
     }
 
-    .notify-row {
+    .input-row {
       display: flex;
       gap: 8px;
-      width: 100%;
     }
 
-    .notify-input {
+    .email-input {
       flex: 1;
-      height: 48px;
-      padding: 0 16px;
-      background: var(--bg2);
-      border: 1.5px solid var(--line);
+      height: 46px;
+      padding: 0 14px;
+      background: var(--off);
+      border: 1.5px solid var(--line2);
       border-radius: 12px;
-      font-size: 14px;
+      font-size: 13.5px;
       font-family: var(--font);
       color: var(--text);
       outline: none;
-      transition: border-color .2s, box-shadow .2s;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      min-width: 0;
     }
 
-    .notify-input::placeholder { color: var(--text3); }
+    .email-input::placeholder { color: var(--text3); }
 
-    .notify-input:focus {
-      border-color: var(--accent);
+    .email-input:focus {
+      border-color: var(--blue);
+      background: var(--white);
       box-shadow: 0 0 0 3px rgba(37,99,235,.1);
-      background: #fff;
     }
 
-    .notify-btn {
-      height: 48px;
-      padding: 0 22px;
-      background: var(--accent);
+    .email-input.err {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(239,68,68,.1);
+    }
+
+    .submit-btn {
+      height: 46px;
+      padding: 0 20px;
+      background: var(--blue);
       border: none;
       border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 13.5px;
+      font-weight: 700;
       font-family: var(--font);
       color: #fff;
       cursor: pointer;
       white-space: nowrap;
-      transition: background .2s, transform .15s;
+      flex-shrink: 0;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 2px 12px rgba(37,99,235,.3);
     }
 
-    .notify-btn:hover   { background: #1d4ed8; transform: translateY(-1px); }
-    .notify-btn:active  { transform: translateY(0); }
+    .submit-btn:hover  { background: var(--blue2); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(37,99,235,.4); }
+    .submit-btn:active { transform: translateY(0); }
 
-    .notify-ok {
+    .success-msg {
       display: none;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      height: 48px;
-      width: 100%;
-      background: #f0fdf4;
-      border: 1.5px solid #bbf7d0;
+      height: 46px;
+      background: var(--green-s);
+      border: 1.5px solid var(--green-b);
       border-radius: 12px;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
-      color: #16a34a;
+      color: var(--green);
     }
 
-    .notify-ok svg {
-      width: 16px; height: 16px;
-      stroke: #16a34a; fill: none;
+    .success-msg svg {
+      width: 15px; height: 15px;
+      stroke: var(--green); fill: none;
       stroke-width: 2.5;
       stroke-linecap: round; stroke-linejoin: round;
-      flex-shrink: 0;
     }
 
-    /* ── Social ── */
-    .social {
+    /* ─── Social ─── */
+    .social-wrap {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 10px;
-      margin-top: 32px;
+      gap: 14px;
+      margin-top: 28px;
     }
 
-    .s-btn {
-      width: 42px; height: 42px;
+    .social-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+
+    .social-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .s-icon {
+      width: 40px; height: 40px;
       border-radius: 10px;
-      border: 1.5px solid var(--line);
-      background: var(--bg);
+      border: 1.5px solid var(--line2);
+      background: var(--white);
       display: flex; align-items: center; justify-content: center;
       color: var(--text3);
       text-decoration: none;
-      transition: all .2s;
+      transition: all .2s var(--ease);
     }
 
-    .s-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: #eff6ff;
+    .s-icon:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: var(--blue-s);
+      transform: translateY(-2px);
     }
 
-    .s-btn svg {
-      width: 17px; height: 17px;
+    .s-icon svg {
+      width: 16px; height: 16px;
       stroke: currentColor; fill: none;
       stroke-width: 2;
       stroke-linecap: round; stroke-linejoin: round;
     }
 
-    /* ── Footer ── */
-    .footer {
+    /* ─── Footer ─── */
+    footer {
       position: fixed;
-      bottom: 24px;
+      bottom: 0; left: 0; right: 0;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--line);
+      z-index: 10;
+    }
+
+    footer span {
       font-size: 12px;
       color: var(--text3);
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 400px) {
-      .countdown { gap: 18px; }
-      .cd-sep    { font-size: 36px; }
+    footer a {
+      color: var(--text2);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+
+    footer a:hover { color: var(--blue); }
+
+    /* ─── Progress strip inside card ─── */
+    .progress-wrap {
+      margin-bottom: 28px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .progress-top span:first-child {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text2);
+      letter-spacing: .3px;
+    }
+
+    .progress-top span:last-child {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    .progress-track {
+      height: 5px;
+      background: var(--line);
+      border-radius: 999px;
+      overflow: visible;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, var(--blue2), var(--blue), #60a5fa);
+      border-radius: 999px;
+      position: relative;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      right: -1px; top: 50%;
+      transform: translateY(-50%);
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: var(--blue);
+      border: 2px solid var(--white);
+      box-shadow: 0 0 0 2px rgba(37,99,235,.25);
     }
   </style>
 </head>
 <body>
 
-  <div class="wrap">
+  <!-- Blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <!-- Card -->
+  <div class="card">
 
     <!-- Logo -->
     <div class="logo">
@@ -320,124 +443,136 @@
     </div>
 
     <!-- Badge -->
-    <div class="badge">
-      <div class="badge-dot"></div>
+    <div class="pill">
+      <div class="pill-dot"></div>
       Yapım Aşamasında
     </div>
 
     <!-- Headline -->
-    <h1>Çok <span>Yakında</span><br>Buradayız</h1>
+    <div class="headline">
+      Yeni sitemiz<br><b>çok yakında</b> 🚀
+    </div>
     <p class="sub">
-      Sizler için yepyeni bir deneyim hazırlıyoruz.<br>
-      Yeni sitemiz çok yakında yayında olacak.
+      Sizler için özenle hazırlıyoruz.<br>
+      Kısa süre içinde yayına alıyoruz.
     </p>
 
     <!-- Countdown -->
     <div class="countdown">
-      <div class="cd-item">
-        <div class="cd-num" id="cd-days">00</div>
-        <div class="cd-label">Gün</div>
+      <div class="cd-box">
+        <div class="cd-num" id="cd-d">00</div>
+        <div class="cd-lbl">Gün</div>
       </div>
-      <div class="cd-sep">:</div>
-      <div class="cd-item">
-        <div class="cd-num" id="cd-hours">00</div>
-        <div class="cd-label">Saat</div>
+      <div class="cd-box">
+        <div class="cd-num" id="cd-h">00</div>
+        <div class="cd-lbl">Saat</div>
       </div>
-      <div class="cd-sep">:</div>
-      <div class="cd-item">
-        <div class="cd-num" id="cd-mins">00</div>
-        <div class="cd-label">Dakika</div>
+      <div class="cd-box">
+        <div class="cd-num" id="cd-m">00</div>
+        <div class="cd-lbl">Dakika</div>
       </div>
-      <div class="cd-sep">:</div>
-      <div class="cd-item">
-        <div class="cd-num" id="cd-secs">00</div>
-        <div class="cd-label">Saniye</div>
+      <div class="cd-box">
+        <div class="cd-num" id="cd-s">00</div>
+        <div class="cd-lbl">Saniye</div>
       </div>
     </div>
 
-    <div class="divider"></div>
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span>Geliştirme süreci</span>
+        <span>72%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
 
     <!-- Notify -->
-    <div class="notify-label">Yayına girdiğimizde sizi haberdar edelim</div>
-    <div class="notify-row" id="notifyForm">
+    <div class="notify-head">🔔 Haberdar olun</div>
+    <div class="notify-sub">Yayına girdiğimizde size haber verelim.</div>
+
+    <div class="input-row" id="notifyForm">
       <input
-        class="notify-input"
+        class="email-input"
         type="email"
         id="emailInput"
         placeholder="E-posta adresiniz"
+        autocomplete="email"
       />
-      <button class="notify-btn" onclick="handleNotify()">Bildir</button>
+      <button class="submit-btn" onclick="handleNotify()">Bildir</button>
     </div>
-    <div class="notify-ok" id="notifyOk">
+    <div class="success-msg" id="successMsg">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
       Harika! Sizi bilgilendireceğiz.
     </div>
 
     <!-- Social -->
-    <div class="social">
-      <a href="#" class="s-btn" title="Instagram">
-        <svg viewBox="0 0 24 24">
-          <rect x="2" y="2" width="20" height="20" rx="5"/>
-          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-        </svg>
-      </a>
-      <a href="#" class="s-btn" title="Facebook">
-        <svg viewBox="0 0 24 24">
-          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-        </svg>
-      </a>
-      <a href="#" class="s-btn" title="WhatsApp">
-        <svg viewBox="0 0 24 24">
-          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-        </svg>
-      </a>
-      <a href="#" class="s-btn" title="E-posta">
-        <svg viewBox="0 0 24 24">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-          <polyline points="22,6 12,13 2,6"/>
-        </svg>
-      </a>
+    <div class="social-wrap">
+      <div class="social-lbl">Bizi Takip Edin</div>
+      <div class="social-row">
+        <a href="#" class="s-icon" title="Instagram">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r=".5" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#" class="s-icon" title="Facebook">
+          <svg viewBox="0 0 24 24">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+        </a>
+        <a href="#" class="s-icon" title="WhatsApp">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+        </a>
+        <a href="#" class="s-icon" title="E-posta">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </a>
+      </div>
     </div>
 
   </div>
 
   <!-- Footer -->
-  <div class="footer">© 2026 Wow Mobilya. Tüm hakları saklıdır.</div>
+  <footer>
+    <span>© 2026 <a href="#">Wow Mobilya</a>. Tüm hakları saklıdır.</span>
+  </footer>
 
   <script>
-    // ── Countdown ──
+    // ── Countdown to 1 Sep 2026 ──
     const LAUNCH = new Date('2026-09-01T00:00:00');
+    const p = n => String(n).padStart(2,'0');
 
     function tick() {
       const diff = LAUNCH - Date.now();
       if (diff <= 0) return;
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000)  / 60000);
-      const s = Math.floor((diff % 60000)    / 1000);
-      const p = n => String(n).padStart(2, '0');
-      document.getElementById('cd-days').textContent  = p(d);
-      document.getElementById('cd-hours').textContent = p(h);
-      document.getElementById('cd-mins').textContent  = p(m);
-      document.getElementById('cd-secs').textContent  = p(s);
+      document.getElementById('cd-d').textContent = p(Math.floor(diff / 86400000));
+      document.getElementById('cd-h').textContent = p(Math.floor((diff % 86400000) / 3600000));
+      document.getElementById('cd-m').textContent = p(Math.floor((diff % 3600000) / 60000));
+      document.getElementById('cd-s').textContent = p(Math.floor((diff % 60000) / 1000));
     }
-    tick();
-    setInterval(tick, 1000);
+    tick(); setInterval(tick, 1000);
 
     // ── Notify ──
     function handleNotify() {
-      const v = document.getElementById('emailInput').value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
-        const el = document.getElementById('emailInput');
-        el.style.borderColor = '#ef4444';
-        el.style.boxShadow   = '0 0 0 3px rgba(239,68,68,.1)';
-        el.focus();
-        setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 1800);
+      const inp = document.getElementById('emailInput');
+      const val = inp.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        inp.classList.add('err');
+        inp.focus();
+        setTimeout(() => inp.classList.remove('err'), 1800);
         return;
       }
       document.getElementById('notifyForm').style.display = 'none';
-      document.getElementById('notifyOk').style.display   = 'flex';
+      document.getElementById('successMsg').style.display = 'flex';
     }
 
     document.getElementById('emailInput')
