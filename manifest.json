@@ -1,11 +1,13 @@
 {
-  "name": "Mobilya Üretim Hata Takip Pro",
-  "short_name": "Hata Takip",
-  "description": "Mobilya üretim hata takip ve raporlama uygulaması",
+  "name": "Wow Mobilya – Coming Soon",
+  "short_name": "Wow Mobilya",
+  "description": "Wow Mobilya – Premium Furniture Solutions. Our new platform is coming soon.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f6f7fb",
-  "theme_color": "#ffffff",
+  "background_color": "#0b0b0c",
+  "theme_color": "#0b0b0c",
+  "orientation": "portrait-primary",
+  "lang": "en",
   "icons": [
     {
       "src": "https://i.ibb.co/mC3mvn8N/images.png",
@@ -15,4 +17,3 @@
     }
   ]
 }
-
